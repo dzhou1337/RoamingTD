@@ -1,0 +1,4 @@
+1/17/20 1:34 PM
+Finished up hud hot bar feature
+Get hp working
+implement each hot bar function
