@@ -8,5 +8,13 @@ drag = .8
 waypoint = 0
 
 //player damage/knockback numbers
-push = 20
+push = 5
 damage = 20
+
+
+hp_base = 16
+hp = hp_base
+healthbar_num = max(round(hp/hp_base * 21), 0)
+
+hitByWrench = false
+knocked = false

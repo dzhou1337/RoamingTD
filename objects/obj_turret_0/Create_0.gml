@@ -1,5 +1,5 @@
 /// @description initiate turret0 params
-range = 1000
+range = 200
 fireRate = 60
 aimDirection = 0
 reloading = false

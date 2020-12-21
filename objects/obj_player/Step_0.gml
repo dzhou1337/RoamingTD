@@ -20,9 +20,11 @@ if(!knocked){
 }
 
 if(knocked){
-	drag = .2
+	drag = .8
+	maxspeed = 20
 } else {
 	drag = .8
+	maxspeed = 4
 }
 
 //friction
@@ -39,6 +41,7 @@ if (speed == 0){
 	knocked = false
 }
 
+
 //better wall collision
 if(place_meeting(x+hspeed,y,obj_wall)){
 	while(!place_meeting(x+sign(hspeed), y, obj_wall)){
@@ -53,10 +56,22 @@ if(place_meeting(x,y+vspeed,obj_wall)){
 	vspeed = 0;
 }
 
+//for sprite flipping
+if(mouse_x > x) {
+	facingRight = true
+} else {
+	facingRight = false
+}
+
+xyVals = scr_normalize(x, y, mouse_x, mouse_y, 10)
+xOffset = xyVals[0]
+yOffset = xyVals[1]
+
 //non-movement keyboard inputs
 switch (keyboard_key) {
 	case ord("1"):
 		active_tool = tool.Tool
+
 		break;
 		
 	case ord("2"):
@@ -83,10 +98,62 @@ switch (keyboard_key) {
 		break;
 }
 
-//mouse inputs
+//mouse click inputs
 if(mouse_check_button_pressed(mb_left)){
 	switch(active_tool){
 		case tool.Tool:
+			
+			break;
+			
+		case tool.Weapon1:
+			if(!weapon1Recharging){
+				var i
+				for(i = 0; i < 6; i += 1){
+					bullet = instance_create_layer(x, y, "Instances", weapon1BulletType)
+					bullet.direction = point_direction(x, y, mouse_x, mouse_y) + (-10 + 5*i)
+				}
+				weapon1Recharging = true
+				alarm[1] = weapon1FireRate
+			}
+			break;
+			
+		case tool.Weapon2:
+			if(!weapon2Recharging){
+				bullet = instance_create_layer(x, y, "Instances", weapon2BulletType)
+
+				weapon2Recharging = true
+				alarm[2] = weapon2FireRate
+			}
+			break;
+			
+		case tool.BuildDMG:	
+			if(ghostbuilding.inRange && ghostbuilding.clear){
+				if (scrap >= 100){
+				instance_create_layer(obj_game.activeTile_x, obj_game.activeTile_y, "Instances", obj_turret_0)
+					scrap -= 100
+				}
+			}
+			break;
+		
+		case tool.BuildSUP:
+			break;
+			
+		case tool.Demolish:
+			break;
+	}
+}
+
+//mouse button held inputs
+if(mouse_check_button(mb_left)){
+	switch(active_tool){
+		case tool.Tool:
+			if(!meleeRecharging){
+				
+				melee = instance_create_layer(x + xOffset, y + yOffset, "Instances", obj_wrench)
+
+				meleeRecharging = true
+				alarm[3] = meleeFireRate
+			}
 			break;
 			
 		case tool.Weapon1:
@@ -96,10 +163,6 @@ if(mouse_check_button_pressed(mb_left)){
 			break;
 			
 		case tool.BuildDMG:	
-			if(ghostbuilding.clear){
-				instance_create_layer(obj_game.activeTile_x, obj_game.activeTile_y, "Instances", obj_turret_0)
-				scrap -= 100
-			}
 			break;
 		
 		case tool.BuildSUP:

@@ -1,6 +1,16 @@
 /// @description generic enemy AI
 
-speed += accel
+
+
+if(knocked){
+	drag = 0.8
+	maxspeed = 20
+} else {
+	drag = 0.8
+	maxspeed = 1
+	speed += accel
+}
+
 
 if (speed > 0){
 	speed -= drag;
@@ -11,6 +21,10 @@ if (speed > 0){
 }
 //caps movement speed at maxspeed
 speed = min(speed, maxspeed);
+
+if(speed == 0){
+	knocked = false
+}
 
 var n = noone
 var d, t //d for closest distance, t for check distance.
@@ -24,10 +38,25 @@ with obj_waypoint_enemy {
     }
 }
 
-nextStep = n
 
-if (n != noone){
-	direction = point_direction(x,y,nextStep.x,nextStep.y)
-} else {
-	speed = 0
+	nextStep = n
+
+	if (n != noone){
+		if(!knocked){
+			direction = point_direction(x,y,nextStep.x,nextStep.y)
+		}
+	} else {
+		speed = 0
+	}
+	
+
+
+
+
+
+healthbar_num = max(round(hp/hp_base * 21), 0)
+
+if(hp <= 0){
+	instance_destroy()
 }
+
